@@ -1,0 +1,32 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "test": "jest",
+    "bankai": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/solo925/Backend-Nodejs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/solo925/Backend-Nodejs/issues"
+  },
+  "homepage": "https://github.com/solo925/Backend-Nodejs#readme",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.7"
+  },
+  "dependencies": {
+    "chai": "^5.1.1",
+    "chalk": "^5.3.0",
+    "dotenv": "^16.4.5",
+    "express-generator": "^4.16.1",
+    "morgan": "^1.10.0"
+  }
+}

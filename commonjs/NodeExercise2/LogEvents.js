@@ -21,6 +21,8 @@ const logEvents = async (message) => {
     } catch (err) {
         console.error('Error logging event:', err);
     }
+
+    
 };
 
 module.exports = logEvents; // Make sure to export it like this
