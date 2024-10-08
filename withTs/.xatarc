@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://solo-s-workspace-5unga4.us-east-1.xata.sh/db/crud-1",
+  "codegen": {
+    "output": "src/xata.ts"
+  }
+}

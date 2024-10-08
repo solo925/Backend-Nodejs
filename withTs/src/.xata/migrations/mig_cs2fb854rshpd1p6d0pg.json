@@ -1,0 +1,61 @@
+{
+  "done": true,
+  "migration": {
+    "name": "mig_cs2fb854rshpd1p6d0pg",
+    "operations": [
+      {
+        "create_table": {
+          "name": "table1",
+          "columns": [
+            {
+              "name": "xata_id",
+              "type": "text",
+              "check": {
+                "name": "table1_xata_id_length_xata_id",
+                "constraint": "length(\"xata_id\") < 256"
+              },
+              "unique": true,
+              "default": "'rec_' || xata_private.xid()",
+              "nullable": false
+            },
+            {
+              "name": "xata_version",
+              "type": "integer",
+              "default": "0",
+              "nullable": false
+            },
+            {
+              "name": "xata_createdat",
+              "type": "timestamptz",
+              "default": "now()",
+              "nullable": false
+            },
+            {
+              "name": "xata_updatedat",
+              "type": "timestamptz",
+              "default": "now()",
+              "nullable": false
+            }
+          ]
+        }
+      },
+      {
+        "sql": {
+          "up": "ALTER TABLE \"table1\" REPLICA IDENTITY FULL",
+          "onComplete": true
+        }
+      },
+      {
+        "sql": {
+          "up": "CREATE TRIGGER xata_maintain_metadata_trigger_pgroll\n  BEFORE INSERT OR UPDATE\n  ON \"table1\"\n  FOR EACH ROW\n  EXECUTE FUNCTION xata_private.maintain_metadata_trigger_pgroll()",
+          "onComplete": true
+        }
+      }
+    ]
+  },
+  "migrationType": "pgroll",
+  "name": "mig_cs2fb854rshpd1p6d0pg",
+  "parent": "mig_cs2eu4rujno0fvdn2u6g",
+  "schema": "public",
+  "startedAt": "2024-10-08T09:04:32.614135Z"
+}
