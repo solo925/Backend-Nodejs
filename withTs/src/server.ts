@@ -41,7 +41,7 @@ app.get("/api/v1/events/:id", ResolveUseByIndex(), (req: Request, res: Response)
     const customReq = req as CustomRequest;
 
 
-    if (!customReq.userFound !== undefined) {
+    if (!customReq.userFound) {
         res.status(404).json({
             message: "Data not available",
         });
@@ -62,7 +62,7 @@ const validateEvent = [
     check('title').not().isEmpty().withMessage('Title is required'),
     check('date').isISO8601().withMessage('Date must be in ISO 8601 format (YYYY-MM-DD)'),
     check('location').not().isEmpty().withMessage('Location is required'),
-    check('imageUrl').isURL().withMessage('Image URL must be valid'),
+    check('imageUrl').optional(),
     check('company').not().isEmpty().withMessage('Company is required'),
     check('price').isFloat({ gt: 0 }).withMessage('Price must be a positive number'),
 ];
@@ -143,11 +143,13 @@ app.patch("/api/v1/events/:id", validateEvent, ResolveUseByIndex(), async (req: 
     // Validation errors handling
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        res.status(400).json({ errors: errors.array() });
+        res.status(400).json({ errors: errors.array() }); // Ensure to return here
     }
 
     const eventID = req.params.id;
     const { imageUrl, title, price, date, location, company } = req.body;
+
+    console.log("Request body:", req.body); // Log request body for debugging
 
     try {
         // Dynamically build the update SQL query based on the provided fields
@@ -183,16 +185,16 @@ app.patch("/api/v1/events/:id", validateEvent, ResolveUseByIndex(), async (req: 
         if (updateFields.length === 0) {
             res.status(400).json({ message: "No fields to update" });
         }
-        type SQLQuery = any;
+
         // Prepare the final SQL query
-        const query: SQLQuery = `UPDATE "events" SET ${updateFields.join(', ')} WHERE id = ?`;
+        const query: any = `UPDATE "events" SET ${updateFields.join(', ')} WHERE id = ?`;
         values.push(eventID); // Append event ID to the values array
 
         // Execute the query with values
         const result = await xata.sql(query, ...values);
 
         // If no row was updated, return a 404 error
-        if (!result) {
+        if (!result) { // Check if any row was updated
             res.status(404).json({ message: "Event not found" });
         }
 
@@ -200,9 +202,11 @@ app.patch("/api/v1/events/:id", validateEvent, ResolveUseByIndex(), async (req: 
         res.status(200).json({ message: "Event updated successfully" });
     } catch (error: any) {
         // Error handling
+        console.error("Error during update:", error); // Log the error
         res.status(500).json({ message: "An error occurred", error });
     }
 });
+
 
 
 
