@@ -1,9 +1,13 @@
 import express from 'express';
 import { syncModels } from './models';
+import mainRoute from './routes/main';
+
 
 const app = express();
 
 app.use(express.json());
+
+app.use('/api/v1', mainRoute);
 
 // Test Route
 app.get('/', async (req, res) => {
@@ -12,5 +16,6 @@ app.get('/', async (req, res) => {
 
 // Sync models
 syncModels();
+
 
 export default app;
